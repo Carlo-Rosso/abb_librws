@@ -1,248 +1,86 @@
-# abb_wrapper
-These packages are intended to ease the interaction between ABB OmniCore controllers and ROS-based systems, by providing ready-to-run ROS nodes.
+# abb_librws
 
 ## Important Notes
-Tested on Ubuntu 20.04 with ROS Noetic.
+
+RobotWare versions `6.x` are currently incompatible with *abb_librws* (due to RWS `1.0` being replaced by RWS `2.0`). Check [this release note](https://robotapps.blob.core.windows.net/apps/ReleaseNotesRWS2019.3.zip) for more information about the different RWS versions.
+
+Please note that this package has not been productized, it is provided "as-is" and only limited support can be expected.
 
 ## Overview
 
-These packages are intended to ease the interaction between ABB OmniCore controllers and ROS-based systems, by providing ready-to-run ROS nodes.
+A C++ library for interfacing with ABB robot controllers supporting *Robot Web Services* (RWS). 
+See the online [documentation](https://developercenter.robotstudio.com/api/RWS) for a detailed description of what RWS is and how to use it.
 
-The included (*principal*) packages are briefly described in the following table:
+### Sketch
 
-| Package | Description |
-| --- | --- |
-| [abb_librws](abb_librws) | (A modified version of https://github.com/ros-industrial/abb_librws) Provides a ROS node that communicate with the controller using Robot Web Services 2.0  |
-| [abb_libegm](abb_libegm) | (A modified version of https://github.com/ros-industrial/abb_libegm) Provides a ROS node that exposes hardware interface, for *direct motion control* of ABB robots (via the *Externally Guided Motion* (`EGM`) interface). |
-| [abb_driver](abb_driver) | Provides ROS nodes for the main interface with the controller. It combine the RWS and EGM node and use the parameters in the yaml file. |
-| [abb_controllers](abb_controllers) | Provides ROS nodes for kinematic calculation using the URDF model of the robot. |
-| [gofa_description](gofa_description) | Provides ROS nodes for kinematic calculation using the URDF model of the robot. |
-| [yumi_description](yumi_description) | Provides ROS nodes for kinematic calculation using the URDF model of the robot. |
-| [degub_rviz_tool](abb_description) | Tools used for tests and debug |
+The following is a conceptual sketch of how this RWS library can be viewed, in relation to an ABB robot controller as well as the EGM companion library mentioned above. The optional *StateMachine Add-In* is related to the robot controller's RAPID program and system configuration.
 
-Please see each package for more details (*e.g. additional requirements, limitations and troubleshooting*).
-
-## Build Instructions
-
-It is assumed that [ROS Noetic has been installed](http://wiki.ros.org/noetic/Installation/Ubuntu) on the system in question.
-
-### Set up ROS
-
-The following instructions assume that a [Catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace) has been created at `$HOME/catkin_ws` and that the *source space* is at `$HOME/catkin_ws/src`. Update paths appropriately if they are different on the build machine.
-
-The following instructions should build the main branches of all required repositories on a ROS Noetic system:
-
-```bash
-echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
-
-mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws/
-catkin_make
-
-echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-```
-
-If no errors were reported as part of the `catkin_make` command, the build has succeeded and the driver should now be usable.
-
-### Install POCO
-
-Start a terminal session (launch terminal) by <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>
-
-Install essential dependencies and git, execute the following commands one by one:
-
-```bash
-sudo apt update
-sudo apt upgrade
-sudo apt install build-essential gdb cmake git
-sudo apt-get install openssl libssl-dev
-# sudo apt-get install libiodbc2 libiodbc2-dev <- This uninstall stuffs from Moveit!
-sudo apt-get install libmysqlclient-dev
-```
-
-Get root access:
-```bash
-sudo -i
-```
-
-Navigate to /tmp/ directory (or any other directory to store temporary files).
-```bash
-cd /tmp/
-```
-
-Clone the Poco git repo:
-```bash
-git clone -b master https://github.com/pocoproject/poco.git
-```
-
-Compile the libraries:
-```bash
-cd poco
-mkdir cmake-build
-cd cmake-build
-cmake ..
-cmake --build . --config Release
-```
-
-**Note**: If you get a library not found error, just install that library via apt.
-
-Install the libraries to include in C++ code:
-```bash
-sudo cmake --build . --target install
-```
-
-Copy all the poco file from /usr/local/lib/ to /usr/lib
-
-### Install Boost C++
-
-[Boost C++](https://www.boost.org)
-```bash
-sudo apt-get install libboost-all-dev
-
-```
-
-### Set up the interface
-
-Copy **abb_wrapper** folder to **src** folder on catkin workspace (`~/catkin_ws/src`).
-```bash
-cd catkin_ws/src
-git clone https://github.com/JOiiNT-LAB/abb_wrapper.git
-```
-
-Move back to the workspace folder (catkin_ws/)
-```bash
-cd ..
-```
-
-Compile the workspace
-```bash
-catkin_make
-```
-
-If there are no errors you are ready to proceed to set up the robot.
-
-## Robot Set up
+![RWS sketch](docs/images/rws_sketch.png)
 
 ### Requirements
 
-* RobotWare version `7.2` or higher (lower versions are incompatible due to changes in the EGM communication protocol).
-* A license for the RobotWare option *Externally Guided Motion* (`3124-1`).
-* StateMachine 2.0 RobotWare Add-In (soon on the RobotApps)
+* RobotWare version `7.x`.
 
-<img src="images/flexpendant1.png" alt="FlexPendant" width="50%" height="50%">
-<img src="images/flexpendant2.png" alt="FlexPendant" width="50%" height="50%">
+### Dependencies
 
-After the creation of the system just configure robot to accept external communication both for EGM and Web Services.
-### RobotStudio
+* [POCO C++ Libraries](https://pocoproject.org) (`>= 1.4.3` due to WebSocket support)
 
-Open RobotStudio
+### Limitations
 
-<img src="images/robotstudio1.png" alt="RobotStudio">
+RWS provides access to several services and resources in the robot controller, and this library currently support the following:
 
-On the Controller Tab, click Add Controller > One Click Connect..
+* Reading/writing of IO-signals.
+* Reading/writing of RAPID data.
+* Reading of RAPID data properties.
+*	Starting/stopping/resetting the RAPID program.
+*	Subscriptions (i.e. receiving notifications when resources are updated).
+*	Uploading/downloading/removing files.
+*	Checking controller state (e.g. motors on/off, auto/manual mode and RAPID execution running/stopped).
+*	Reading the Joint/Cartesian values of a mechanical unit.
+*	Register as a local/remote user (e.g. for interaction during manual mode).
+*	Turning the motors on/off.
+*	Reading of current RobotWare version and available tasks in the robot system.
+*	Enable/disable lead-through.
+*	Access to SmartGripper functionality.
 
-<img src="images/robotstudio2.png" alt="RobotStudio">
+### Recommendations
 
-Click on "Log in as Default User" button
+* This library has been verified to work with RobotWare `7.3.1`. Other versions are expected to work, but this cannot be guaranteed at the moment.
+* It is a good idea to perform RobotStudio simulations before working with a real robot.
+* It is prudent to familiarize oneself with general safety regulations (e.g. described in ABB manuals).
+* Consider cyber security aspects, before connecting robot controllers to networks.
 
-<img src="images/robotstudio3.png" alt="RobotStudio">
+## Usage Hints
 
+This is a generic library, which can be used together with any RAPID program and system configuration. The library's primary classes are:
 
-### Setup the IP address for the WAN port
-With this configuration, we will set up the IP address of the WAN port where the computer running ROS will be connected.
+* [POCOClient](include/abb_librws/rws_poco_client.h): Sets up and manages HTTP and WebSocket communication and is unaware of the RWS protocol.
+* [RWSClient](include/abb_librws/rws_client.h): Inherits from `POCOClient` and provides interaction methods for using the RWS services and resources.
+* [RWSInterface](include/abb_librws/rws_interface.h): Encapsulates an `RWSClient` instance and provides more user-friendly methods for using the RWS services and resources.
+* [RWSStateMachineInterface](include/abb_librws/rws_state_machine_interface.h): Inherits from `RWSInterface` and has been designed to interact with the aforementioned *StateMachine Add-In*. The interface knows about the custom RAPID variables and routines, as well as system configurations, loaded by the RobotWare Add-In.
 
-* On the Controller tab, in the Configuration group, click Properties and then click `Network settings`.
-  The Network settings dialog opens.
-  
-  <img src="images/robotstudio4.png" alt="RobotStudio">
+The optional *StateMachine Add-In* for RobotWare can be used in combination with any of the classes above, but it works especially well with the `RWSStateMachineInterface` class.
 
-* Select `Use the following IP address` and then enter the required IP address and Subnet mask boxes to manually set the IP address of the controller
+### StateMachine Add-In [Optional]
 
+The purpose of the RobotWare Add-In is to *ease the setup* of ABB robot controllers. It is made for both *real controllers* and *virtual controllers* (simulated in RobotStudio). If the Add-In is selected during a RobotWare system installation, then the Add-In will load several RAPID modules and system configurations based on the system specifications (e.g. number of robots and present options).
 
-  <img src="images/robotstudio5.png" alt="RobotStudio">
+The RAPID modules and configurations constitute a customizable, but ready to run, RAPID program which contains a state machine implementation. Each motion task in the robot system receives its own state machine instance, and the intention is to use this in combination with external systems that require interaction with the robot(s). The following is a conceptual sketch of the RAPID program's execution flow.
 
-**POLIMI SETUP: 
-set WAN IP = 192.168.131.200**
+<p align="center">
+  <img src="docs/images/statemachine_addin_sketch.png" width="500">
+</p>
 
-**This step is optional, also the MGMT port can be used.**
+To install the Add-In:
 
-The MGMT port have a fixed IP address (*192.168.125.1* ) and a DHCP server.
+1. Go to the *Add-Ins* tab in RobotStudio.
+2. Search for *StateMachine Add-In* in the *RobotApps* window.
+3. Select the Add-In and retrieve the Add-In by pressing the *Add* button.
+4. Verify that the Add-In was added to the list *Installed Packages*.
+5. The Add-In should appear as an option during the installation of a RobotWare system.
 
-If you are using the MGMT port make sure that the connected computer running ROS is on the same natwork (*192.168.125.xx* ) or the DHCP is enabled.
+See the Add-In's [user manual](https://robotapps.blob.core.windows.net/appreferences/docs/2093c0e8-d469-4188-bdd2-ca42e27cba5cUserManual.pdf) for more details, as well as for install instructions for RobotWare systems. The manual can also be accessed by right-clicking on the Add-In in the *Installed Packages* list and selecting *Documentation*.
 
-### Setup the UDP device
-Configure the IP address and the port to use for the UDP protocol. **This IP address must be the same of the PC running ROS.**
+## Acknowledgements
 
-Using RobotStudio, first **request the write access**.
-
-  <img src="images/robotstudio6.png" alt="RobotStudio">
-
-On the Controller tab, in the Configuration group, click Configuration and then click `Communication`.
-
-  <img src="images/robotstudio7.png" alt="RobotStudio">
-
-Double click on the `UDP Unicast Device` item.
-
-  <img src="images/robotstudio9.png" alt="RobotStudio">
-
-**POLIMI SETUP:**
-
-**set ROB 1 IP = 192.168.131.5**
-
-**set UCDEVICE IP = 192.168.131.5**
-
-
-
-
-### Setup the Controller Firewall
-Using the WAN port the firewall on the public network must be configured.
-
-Using RobotStudio, first **request the write access**.
-On the Controller tab, in the Configuration group, click Configuration and then click `Communication`.
-
-Double click on the `Firewall Manager` item.
-Enable on the public network the following services:
-* RobotWebServices
-* UDPUC (available from RW 7.3.2)
-
-  <img src="images/robotstudio8.png" alt="RobotStudio">
-
-### Configure the user privileges
-This package use the [Robot Web Services 2.0](https://developercenter.robotstudio.com/api/RWS) (RWS) to control the robot.
-Each RWS session is logged using a user that must to be present on the User Authorization System of the controller (for more details about User Authorization System, see Operating manual - RobotStudio).
-If not specified, for the RWS communication, the default user is used:
-* Username: **Default User**
-* Password: **robotics**
-
-By default, the **Default User** does not have the grant *Remote Start and Stop in Auto* (run rapid routine from the WAN port in Auto mode).
-
-The steps to configure the user account are:
-1. Using RobotStudio log-in on the controller as Administrator (usually with the user **Admin** and password **robotics**).
-  <img src="images/robotstudio12.png" alt="RobotStudio">
-  <img src="images/robotstudio13.png" alt="RobotStudio" width="50%" height="50%">
-
-2. On the Controller tab, in the Access group, click Authenticate and then click `Edit User Account`.
-   <img src="images/robotstudio10.png" alt="RobotStudio">
-
-3. On the tab roles check if the grant *Remote Start and Stop in Auto* is checked for the role of the Default User.
-
-   <img src="images/robotstudio11.png" alt="RobotStudio">
-
-4. Apply.
-
-Any other user can be used by passing the name and the password to **rws_interface**.
-
- 
-### Set up Config File and launch your abb robot (e.g. Gofa) 
-Navigate to abb_driver/config/gofa_cfg.yaml
-Modify the parameters based on your robot configuration (e.g. ip_robot, name_robot,task_robot, etc.). Note that the IP robot in the yaml has to be the same of the WAN port (**POLIMI Setup = 192.168.131.200**)
-
-Finally 
-
-**Load in robotstudio in rapid codes from the controller folder "EGM"** 
-**Set robot in Automatic and Motors ON**
-**Connect to WAN port**
-**set PC IP address to 192.168.131.5 (see "Setup the UDP device" above)**
-```
-  source of setup.bash
-$ roslaunch abb_driver interface_gofa.launch
-``` 
+This work is based on the [abb_librws](https://github.com/ros-industrial/abb_librws) classes developed by Jon Tjerngren for ABB IRC5 controllers (running RobotWare `6.x`)
