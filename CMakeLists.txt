@@ -80,3 +80,18 @@ install(DIRECTORY include/
     DESTINATION include
     FILES_MATCHING PATTERN "*.h"
 )
+
+# Export targets.
+set(export_targets ${export_targets};${PROJECT_NAME})
+export(
+  EXPORT export_${PROJECT_NAME}
+  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+  NAMESPACE ${PROJECT_NAME}::
+)
+
+install(
+  EXPORT export_${PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
+  FILE ${PROJECT_NAME}Targets.cmake
+  NAMESPACE ${PROJECT_NAME}::
+)
