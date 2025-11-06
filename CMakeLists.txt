@@ -69,16 +69,53 @@ if(catkin_FOUND)
   )
 endif()
 
-# ===========================
-# Install rules
-# ===========================
-install(TARGETS ${PROJECT_NAME}
-    LIBRARY DESTINATION lib
+#############
+## Install ##
+#############
+install(
+  DIRECTORY include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-install(DIRECTORY include/
-    DESTINATION include
-    FILES_MATCHING PATTERN "*.h"
+install(
+  FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}_export.h
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY cmake/modules/third_party/
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}/cmake
+)
+
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+include(CMakePackageConfigHelpers)
+
+# Create the ${PROJECT_NAME}Config.cmake.
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+  "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake" @ONLY
+)
+
+# Create the ${PROJECT_NAME}ConfigVersion.cmake.
+write_basic_package_version_file(
+  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  COMPATIBILITY AnyNewerVersion
+)
+
+install(
+  FILES
+    "${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/${PROJECT_NAME}Config.cmake"
+    "${PROJECT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/package.xml"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME}
 )
 
 # Export targets.
