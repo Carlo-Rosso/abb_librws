@@ -1,6 +1,6 @@
 /***********************************************************************************************************************
  *
- * Copyright (c) 
+ * Copyright (c)
  * 2015, ABB Schweiz AG
  * 2021, JOiiNT LAB, Fondazione Istituto Italiano di Tecnologia, Intellimech Consorzio per la Meccatronica.
  * All rights reserved.
@@ -34,12 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ***********************************************************************************************************************
- * 
+ *
  * Authors: Gianluca Lentini, Ugo Alberto Simioni
  * Date:18/01/2022
  * Version 1.0
  * Description: this package provides a ROS node that communicates with the controller using Robot Web Services 2.0, original code can be retrieved at https://github.com/ros-industrial/abb_librws
- * 
+ *
  ***********************************************************************************************************************
  */
 
@@ -47,6 +47,7 @@
 #define RWS_STATE_MACHINE_INTERFACE_H
 
 #include "rws_interface.h"
+#include "cstdint"
 
 namespace abb
 {
@@ -695,7 +696,7 @@ public:
   RWSStateMachineInterface(const std::string ip_address,
                            const unsigned short port,
                            const std::string username,
-                           const std::string password, 
+                           const std::string password,
                            const Poco::Net::Context::Ptr ptrContext)
   :
   RWSInterface(ip_address,
@@ -1394,25 +1395,25 @@ private:
       bool JogIn() const;
 
       bool JogOut() const;
-      
 
-      bool Calibrate(uint max_force, uint max_speed) const;
-      
+
+      bool Calibrate(uint32_t max_force, uint32_t max_speed) const;
+
       bool Calibrate() const;
 
-      
+
 
       bool Initialize(const std::string task) const;
 
-      bool VacuumOn(uint num_valve) const;
+      bool VacuumOn(uint32_t num_valve) const;
 
-      bool VacuumOff(uint num_valve) const;
+      bool VacuumOff(uint32_t num_valve) const;
 
-      bool BlowOn(uint num_valve) const;
+      bool BlowOn(uint32_t num_valve) const;
 
-      bool BlowOff(uint num_valve) const;
+      bool BlowOff(uint32_t num_valve) const;
 
-      std::string getPressure(uint num_valve) const;
+      std::string getPressure(uint32_t num_valve) const;
 
 
 

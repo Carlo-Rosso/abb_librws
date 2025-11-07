@@ -1,0 +1,8 @@
+# ninja log v7
+43	548	7842109407051313	CMakeFiles/abb_librws.dir/src/rws_common.cpp.obj	7f2a92776d1a81d9
+74	551	7842109407356588	CMakeFiles/abb_librws.dir/src/rws_rapid.cpp.obj	43c233b454093f85
+65	707	7842109407271484	CMakeFiles/abb_librws.dir/src/rws_poco_client.cpp.obj	3ca846dab788e522
+33	755	7842109406955982	CMakeFiles/abb_librws.dir/src/rws_client.cpp.obj	4730dbebaf68d5d5
+51	753	7842110715407852	CMakeFiles/abb_librws.dir/src/rws_interface.cpp.obj	7e3f2280777e751c
+93	751	7842116076454813	CMakeFiles/abb_librws.dir/src/rws_state_machine_interface.cpp.obj	fd02f13cc62ffe28
+752	910	7842116083055591	abb_librws.lib	ca704c3cc0e92702

@@ -1,0 +1,14 @@
+[workspace]
+authors = ["Carlo Rosso <carlo.rosso@iit.it>"]
+channels = ["conda-forge"]
+name = "abb_librws"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+cmake = ">=4.1.2,<5"
+poco = ">=1.14.2,<2"
+ninja = ">=1.13.1,<2"
+compilers = ">=1.11.0,<2"

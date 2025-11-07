@@ -1,6 +1,6 @@
 /***********************************************************************************************************************
  *
- * Copyright (c) 
+ * Copyright (c)
  * 2015, ABB Schweiz AG
  * 2021, JOiiNT LAB, Fondazione Istituto Italiano di Tecnologia, Intellimech Consorzio per la Meccatronica.
  * All rights reserved.
@@ -34,12 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ***********************************************************************************************************************
- * 
+ *
  * Authors: Gianluca Lentini, Ugo Alberto Simioni
  * Date:18/01/2022
  * Version 1.0
  * Description: this package provides a ROS node that communicates with the controller using Robot Web Services 2.0, original code can be retrieved at https://github.com/ros-industrial/abb_librws
- * 
+ *
  ***********************************************************************************************************************
  */
 #include <algorithm>
@@ -107,7 +107,7 @@ std::vector<RWSInterface::RobotWareOptionInfo> RWSInterface::getPresentRobotWare
                                            xmlFindTextContent(node_list.at(i+1), XMLAttributes::CLASS_VALUE)));
     }
   }
-  
+
   return result;
 }
 
@@ -137,7 +137,7 @@ bool RWSInterface::getMechanicalUnitJointTarget(const std::string mechunit, Join
     if (result)
     {
       std::stringstream ss;
-      
+
       ss << "[["
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_1")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "rax_2")) << ","
@@ -171,7 +171,7 @@ bool RWSInterface::getMechanicalUnitRobTarget(const std::string mechunit, RobTar
     if (result)
     {
       std::stringstream ss;
-      
+
       ss << "[["
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "x")) << ","
          << xmlFindTextContent(rws_result.p_xml_document, XMLAttribute("class", "y")) << ","
@@ -217,15 +217,15 @@ bool RWSInterface::startRAPIDExecution()
 {
   return rws_client_.startRAPIDExecution().success;
 }
-  
+
 bool RWSInterface::stopRAPIDExecution()
 {
   return rws_client_.stopRAPIDExecution().success;
 }
-  
+
 bool RWSInterface::resetRAPIDProgramPointer()
 {
-  
+
   return rws_client_.resetRAPIDProgramPointer().success;
 }
 
@@ -334,7 +334,12 @@ bool RWSInterface::pulseIOSignal(const std::string iosignal, const int lenght)
 {
   setIOSignal(iosignal, "0");
   setIOSignal(iosignal, "1");
-  usleep(lenght);
+  #ifdef _WIN32
+    #include <windows.h>
+    Sleep((lenght) / 1000);
+  #else
+    usleep(lenght);
+  #endif
   return setIOSignal(iosignal, "0");;
 }
 

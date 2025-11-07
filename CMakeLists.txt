@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.5)
 project(abb_librws VERSION 1.0.0 LANGUAGES CXX)
 
-add_compile_options(-std=c++11)
+set(CMAKE_CXX_STANDARD 17)
+
+add_compile_options(/W0)
+
+
+include(GNUInstallDirs)
 
 # ===========================
 # Try to detect ROS/catkin
