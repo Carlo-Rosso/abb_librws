@@ -3,4 +3,5 @@
 .pixi
 *.egg-info
 
-build/
+# build files
+/build/

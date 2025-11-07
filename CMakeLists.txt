@@ -28,6 +28,10 @@ find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML)
 ###########
 ## Build ##
 ###########
+if(NOT DEFINED BUILD_SHARED_LIBS)
+  option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
+endif()
+
 set(
   SRC_FILES
     src/rws_client.cpp

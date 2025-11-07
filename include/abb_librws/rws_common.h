@@ -46,6 +46,7 @@
 #ifndef RWS_COMMON_H
 #define RWS_COMMON_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 

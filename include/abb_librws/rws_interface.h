@@ -47,7 +47,6 @@
 #define RWS_INTERFACE_H
 
 #include "rws_client.h"
-#include "iostream"
 
 namespace abb
 {
