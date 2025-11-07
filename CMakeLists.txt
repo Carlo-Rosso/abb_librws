@@ -28,10 +28,6 @@ find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML)
 ###########
 ## Build ##
 ###########
-if(NOT DEFINED BUILD_SHARED_LIBS)
-  option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
-endif()
-
 set(
   SRC_FILES
     src/rws_client.cpp
@@ -51,7 +47,7 @@ generate_export_header(${PROJECT_NAME})
 target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
   $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
-  ${Poco_INCLUDE_DIRS}
+  PRIVATE ${Poco_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC

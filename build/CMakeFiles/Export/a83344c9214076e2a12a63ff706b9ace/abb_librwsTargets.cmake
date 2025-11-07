@@ -58,7 +58,9 @@ endif()
 add_library(abb_librws::abb_librws STATIC IMPORTED)
 
 set_target_properties(abb_librws::abb_librws PROPERTIES
-  INTERFACE_LINK_LIBRARIES "Poco::Net;Poco::Util;Poco::Foundation;Poco::XML;PocoNet;PocoUtil;PocoFoundation"
+  INTERFACE_COMPILE_DEFINITIONS "ABB_LIBRWS_STATIC_DEFINE"
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  INTERFACE_LINK_LIBRARIES "C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoFoundation.lib;C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoNet.lib;C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoUtil.lib;C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoXML.lib"
 )
 
 # Load information for each installed configuration.

@@ -50,14 +50,16 @@ unset(_cmake_expected_targets)
 add_library(abb_librws::abb_librws STATIC IMPORTED)
 
 set_target_properties(abb_librws::abb_librws PROPERTIES
-  INTERFACE_LINK_LIBRARIES "Poco::Net;Poco::Util;Poco::Foundation;Poco::XML;PocoNet;PocoUtil;PocoFoundation"
+  INTERFACE_COMPILE_DEFINITIONS "ABB_LIBRWS_STATIC_DEFINE"
+  INTERFACE_INCLUDE_DIRECTORIES "C:/Users/gcorrenti/abb_librws/include;C:/Users/gcorrenti/abb_librws/build"
+  INTERFACE_LINK_LIBRARIES "C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoFoundation.lib;C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoNet.lib;C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoUtil.lib;C:/Users/gcorrenti/abb_librws/.pixi/envs/default/Library/lib/PocoXML.lib"
 )
 
 # Import target "abb_librws::abb_librws" for configuration "Debug"
 set_property(TARGET abb_librws::abb_librws APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
 set_target_properties(abb_librws::abb_librws PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_DEBUG "CXX"
-  IMPORTED_LOCATION_DEBUG "C:/Users/crosso/abb_librws1/build/abb_librws.lib"
+  IMPORTED_LOCATION_DEBUG "C:/Users/gcorrenti/abb_librws/build/abb_librws.lib"
   )
 
 # This file does not depend on other imported targets which have
