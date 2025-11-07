@@ -52,6 +52,10 @@
 
 #include "Poco/DOM/AutoPtr.h"
 #include "Poco/DOM/Document.h"
+#include "Poco/DOM/NamedNodeMap.h"
+#include "Poco/DOM/NodeFilter.h"
+#include "Poco/DOM/NodeIterator.h"
+#include "Poco/DOM/NodeList.h"
 
 namespace abb
 {
@@ -140,22 +144,22 @@ struct SystemConstants
     /**
      * \brief Robot controller motor on.
      */
-    static const std::string CONTROLLER_MOTOR_ON;
-    
+    inline static const std::string CONTROLLER_MOTOR_ON       = "motoron";
+
     /**
      * \brief Robot controller motor off.
      */
-    static const std::string CONTROLLER_MOTOR_OFF;
+    inline static const std::string CONTROLLER_MOTOR_OFF      = "motoroff";
 
     /**
      * \brief Robot controller auto mode.
      */
-    static const std::string PANEL_OPERATION_MODE_AUTO;
+    inline static const std::string PANEL_OPERATION_MODE_AUTO = "AUTO";
 
     /**
      * \brief RAPID running.
      */
-    static const std::string RAPID_EXECUTION_RUNNING;
+    inline static const std::string RAPID_EXECUTION_RUNNING   = "running";
   };
   
   /**
@@ -166,67 +170,67 @@ struct SystemConstants
     /**
      * \brief Default name of an application using RWS.
      */
-    static const std::string EXTERNAL_APPLICATION;
+    inline static const std::string EXTERNAL_APPLICATION   = "ExternalApplication";
     
     /**
      * \brief Default location of an application using RWS.
      */
-    static const std::string EXTERNAL_LOCATION;
+    inline static const std::string EXTERNAL_LOCATION      = "ExternalLocation";
 
     /**
      * \brief Default port number for RWS communication.
      */
-    static const unsigned short DEFAULT_PORT_NUMBER;
+    static constexpr unsigned short DEFAULT_PORT_NUMBER    = 443;
     
     /**
      * \brief Default password (for unconfigured robot controller systems).
      */
-    static const std::string DEFAULT_PASSWORD;
+    inline static const std::string DEFAULT_PASSWORD       = "robotics";
 
     /**
      * \brief Default username (for unconfigured robot controller systems).
      */
-    static const std::string DEFAULT_USERNAME;
+    inline static const std::string DEFAULT_USERNAME       = "Default User";
 
     /**
      * \brief Local user.
      */
-    static const std::string LOCAL;
+    inline static const std::string LOCAL                  = "local";
 
     /**
      * \brief Mechanical unit name for ROB_1.
      */
-    static const std::string MECHANICAL_UNIT_ROB_1;
+    inline static const std::string MECHANICAL_UNIT_ROB_1  = "ROB_1";
     
     /**
      * \brief Mechanical unit name for ROB_2.
      */
-    static const std::string MECHANICAL_UNIT_ROB_2;
+    inline static const std::string MECHANICAL_UNIT_ROB_2  = "ROB_2";
     
     /**
      * \brief Mechanical unit name for ROB_3.
      */
-    static const std::string MECHANICAL_UNIT_ROB_3;
+    inline static const std::string MECHANICAL_UNIT_ROB_3  = "ROB_3";
     
     /**
      * \brief Mechanical unit name for ROB_4.
      */
-    static const std::string MECHANICAL_UNIT_ROB_4;
+    inline static const std::string MECHANICAL_UNIT_ROB_4  = "ROB_4";
     
     /**
      * \brief Mechanical unit name for ROB_L.
      */
-    static const std::string MECHANICAL_UNIT_ROB_L;
+    inline static const std::string MECHANICAL_UNIT_ROB_L  = "ROB_L";
     
     /**
      * \brief Mechanical unit name for ROB_R.
      */
-    static const std::string MECHANICAL_UNIT_ROB_R;
+    inline static const std::string MECHANICAL_UNIT_ROB_R  = "ROB_R";
     
     /**
      * \brief Remote user.
      */
-    static const std::string REMOTE;
+    inline static const std::string REMOTE                 = "remote";
   };
 
   /**
@@ -239,52 +243,52 @@ struct SystemConstants
      *
      * Note: Requires the Smart Gripper product.
      */
-    static const std::string HAND_ACTUAL_POSITION_L;
+    inline static const std::string HAND_ACTUAL_POSITION_L   = "hand_ActualPosition_L";
         
     /**
      * \brief Name of defined IO signal for smart gripper right position.
      *
      * Note: Requires the Smart Gripper product.
      */
-    static const std::string HAND_ACTUAL_POSITION_R;
+    inline static const std::string HAND_ACTUAL_POSITION_R   = "hand_ActualPosition_R";
         
     /**
      * \brief Name of defined IO signal for smart gripper left speed.
      *
      * Note: Requires the Smart Gripper product.
      */
-    static const std::string HAND_ACTUAL_SPEED_L;
+    inline static const std::string HAND_ACTUAL_SPEED_L      = "hand_ActualSpeed_L";
         
     /**
      * \brief Name of defined IO signal for smart gripper right speed.
      *
      * Note: Requires the Smart Gripper product.
      */
-    static const std::string HAND_ACTUAL_SPEED_R;
+    inline static const std::string HAND_ACTUAL_SPEED_R      = "hand_ActualSpeed_R";
         
     /**
      * \brief Name of defined IO signal for smart gripper left calibration status.
      *
      * Note: Requires the Smart Gripper product.
      */
-    static const std::string HAND_STATUS_CALIBRATED_L;
+    inline static const std::string HAND_STATUS_CALIBRATED_L = "hand_StatusCalibrated_L";
         
     /**
      * \brief Name of defined IO signal for smart gripper right calibration status.
      *
      * Note: Requires the Smart Gripper product.
      */
-    static const std::string HAND_STATUS_CALIBRATED_R;
+    inline static const std::string HAND_STATUS_CALIBRATED_R = "hand_StatusCalibrated_R";
     
     /**
      * \brief High digital IO signal.
      */
-    static const std::string HIGH;
+    inline static const std::string HIGH                     = "1";
 
     /**
      * \brief Low digital IO signal.
      */
-    static const std::string LOW;
+    inline static const std::string LOW                      = "0";
   };
     
   /**
@@ -295,62 +299,62 @@ struct SystemConstants
     /**
      * \brief RAPID boolean false.
      */
-    static const std::string RAPID_FALSE;
+    inline static const std::string RAPID_FALSE = "FALSE";
 
     /**
      * \brief RAPID boolean true.
      */
-    static const std::string RAPID_TRUE;
+    inline static const std::string RAPID_TRUE  = "TRUE";
     
     /**
      * \brief Default name for the first robot RAPID motion task.
      */
-    static const std::string TASK_ROB_1;
+    inline static const std::string TASK_ROB_1  = "T_ROB1";
 
     /**
      * \brief Default name for the second robot RAPID motion task.
      */
-    static const std::string TASK_ROB_2;
+    inline static const std::string TASK_ROB_2  = "T_ROB2";
 
     /**
      * \brief Default name for the third robot RAPID motion task.
      */
-    static const std::string TASK_ROB_3;
+    inline static const std::string TASK_ROB_3  = "T_ROB3";
 
     /**
      * \brief Default name for the fourth robot RAPID motion task.
      */
-    static const std::string TASK_ROB_4;
+    inline static const std::string TASK_ROB_4  = "T_ROB4";
 
     /**
      * \brief Default name for the IRB14000 (a.k.a YuMi) left arm robot RAPID motion task.
      */
-    static const std::string TASK_ROB_L;
+    inline static const std::string TASK_ROB_L  = "T_ROB_L";
         
     /**
      * \brief Default name for the IRB14000 (a.k.a YuMi) right arm robot RAPID motion task.
      */
-    static const std::string TASK_ROB_R;
+    inline static const std::string TASK_ROB_R  = "T_ROB_R";
     
     /**
      * \brief RAPID data type bool.
      */
-    static const std::string TYPE_BOOL;
+    inline static const std::string TYPE_BOOL   = "bool";
     
     /**
      * \brief RAPID data type dnum.
      */
-    static const std::string TYPE_DNUM;
+    inline static const std::string TYPE_DNUM   = "dnum";
     
     /**
      * \brief RAPID data type num.
      */
-    static const std::string TYPE_NUM;
+    inline static const std::string TYPE_NUM    = "num";
     
     /**
      * \brief RAPID data type string.
      */
-    static const std::string TYPE_STRING;
+    inline static const std::string TYPE_STRING = "string";
   };
 
   /**
@@ -366,82 +370,82 @@ struct SystemConstants
       /**
        * \brief Class & cfg-ia-t-li.
        */
-      static const XMLAttribute CLASS_CFG_IA_T_LI;
+  inline static const XMLAttribute CLASS_CFG_IA_T_LI = XMLAttribute("class", "cfg-ia-t-li");
 
       /**
        * \brief Class & controller execution state.
        */
-      static const XMLAttribute CLASS_CTRLEXECSTATE;
+  inline static const XMLAttribute CLASS_CTRLEXECSTATE = XMLAttribute("class", "ctrlexecstate");
 
       /**
        * \brief Class & controller state.
        */
-      static const XMLAttribute CLASS_CTRLSTATE;
+  inline static const XMLAttribute CLASS_CTRLSTATE = XMLAttribute("class", "ctrlstate");
       
       /**
        * \brief Class & data type.
        */
-      static const XMLAttribute CLASS_DATTYP;
+  inline static const XMLAttribute CLASS_DATTYP = XMLAttribute("class", "dattyp");
       
       /**
        * \brief Class & ios-signal.
        */
-      static const XMLAttribute CLASS_IOS_SIGNAL;
+  inline static const XMLAttribute CLASS_IOS_SIGNAL = XMLAttribute("class", "ios-signal");
 
       /**
        * \brief Class & lvalue.
        */
-      static const XMLAttribute CLASS_LVALUE;
+  inline static const XMLAttribute CLASS_LVALUE = XMLAttribute("class", "lvalue");
       
       /**
        * \brief Class & motiontask.
        */
-      static const XMLAttribute CLASS_MOTIONTASK;
+  inline static const XMLAttribute CLASS_MOTIONTASK = XMLAttribute("class", "motiontask");
       
       /**
        * \brief Class & name.
        */
-      static const XMLAttribute CLASS_NAME;
+  inline static const XMLAttribute CLASS_NAME = XMLAttribute("class", "name");
 
       /**
        * \brief Class & operation mode.
        */
-      static const XMLAttribute CLASS_OPMODE;
+  inline static const XMLAttribute CLASS_OPMODE = XMLAttribute("class", "opmode");
       
       /**
        * \brief Class & rap-module-info-li.
        */
-      static const XMLAttribute CLASS_RAP_MODULE_INFO_LI;
+  inline static const XMLAttribute CLASS_RAP_MODULE_INFO_LI = XMLAttribute("class", "rap-module-info-li");
 
       /**
        * \brief Class & rap-task-li.
        */
-      static const XMLAttribute CLASS_RAP_TASK_LI;
+  inline static const XMLAttribute CLASS_RAP_TASK_LI = XMLAttribute("class", "rap-task-li");
 
       /**
        * \brief Class & RobotWare version name.
        */
-      static const XMLAttribute CLASS_RW_VERSION_NAME;
+  inline static const XMLAttribute CLASS_RW_VERSION_NAME = XMLAttribute("class", "rwversionname");
 
       /**
        * \brief Class & state.
        */
-      static const XMLAttribute CLASS_STATE;
+  inline static const XMLAttribute CLASS_STATE = XMLAttribute("class", "state");
       
       /**
        * \brief Class & sys-system-li.
        */
-      static const XMLAttribute CLASS_SYS_SYSTEM_LI;
+  inline static const XMLAttribute CLASS_SYS_SYSTEM_LI = XMLAttribute("class", "sys-system-li");
 
       /**
        * \brief Class & type.
        */
-      static const XMLAttribute CLASS_TYPE;
+  inline static const XMLAttribute CLASS_TYPE = XMLAttribute("class", "type");
 
       /**
        * \brief Class & value.
        */
-      static const XMLAttribute CLASS_VALUE;
+      inline static const XMLAttribute CLASS_VALUE = XMLAttribute("class", "value");
     };
     
     /**
@@ -452,153 +456,184 @@ struct SystemConstants
       /**
        * \brief XML attribute name: class.
        */
-      static const std::string CLASS;
+  inline static const std::string CLASS                          = "class";
 
       /**
        * \brief Configuration list item.
        */
-      static const std::string CFG_IA_T_LI;
+  inline static const std::string CFG_IA_T_LI                    = "cfg-ia-t-li";
 
       /**
        * \brief Controller execution state.
        */
-      static const std::string CTRLEXECSTATE;
+  inline static const std::string CTRLEXECSTATE                  = "ctrlexecstate";
       
       /**
        * \brief Controller state.
        */
-      static const std::string CTRLSTATE;
+  inline static const std::string CTRLSTATE                      = "ctrlstate";
       
       /**
        * \brief Data type.
        */
-      static const std::string DATTYP;
+  inline static const std::string DATTYP                         = "dattyp";
 
       /**
        * \brief Home directory.
        */
-      static const std::string HOME_DIRECTORY;
+  inline static const std::string HOME_DIRECTORY                 = "$home";
       
       /**
        * \brief IO signal.
        */
-      static const std::string IOS_SIGNAL;
+  inline static const std::string IOS_SIGNAL                     = "ios-signal";
 
       /**
        * \brief Motion task.
        */
-      static const std::string MOTIONTASK;
+  inline static const std::string MOTIONTASK                     = "motiontask";
       
       /**
        * \brief Name.
        */
-      static const std::string NAME;
+  inline static const std::string NAME                           = "name";
       
       /**
        * \brief Lvalue.
        */
-      static const std::string LVALUE;
+  inline static const std::string LVALUE                         = "lvalue";
 
       /**
        * \brief Opmode.
        */
-      static const std::string OPMODE;
+  inline static const std::string OPMODE                         = "opmode";
 
       /**
        * \brief Options present on the controller.
        */
-      static const std::string PRESENT_OPTIONS;
+  inline static const std::string PRESENT_OPTIONS                = "present_options";
 
       /**
        * \brief RAPID module info list item.
        */
-      static const std::string RAP_MODULE_INFO_LI;
+  inline static const std::string RAP_MODULE_INFO_LI             = "rap-module-info-li";
 
       /**
        * \brief RAPID task list item.
        */
-      static const std::string RAP_TASK_LI;
+  inline static const std::string RAP_TASK_LI                    = "rap-task-li";
       
       /**
        * \brief RobotWare version name.
        */
-      static const std::string RW_VERSION_NAME;
+  inline static const std::string RW_VERSION_NAME                = "rwversionname";
       
       /**
        * \brief State.
        */
-      static const std::string STATE;
+  inline static const std::string STATE                          = "state";
 
       /**
        * \brief Controller topic in the system configurations (abbreviated as sys).
        */
-      static const std::string SYS;
+  inline static const std::string SYS                            = "sys";
       
       /**
        * \brief Sys system list item.
        */
-      static const std::string SYS_SYSTEM_LI;
+  inline static const std::string SYS_SYSTEM_LI                  = "sys-system-li";
 
       /**
        * \brief Type.
        */
-      static const std::string TYPE;
+  inline static const std::string TYPE                           = "type";
 
       /**
        * \brief Value.
        */
-      static const std::string VALUE;
+      inline static const std::string VALUE                          = "value";
     };
 
     /**
      * \brief RWS queries.
      */
+
+     /**
+     * \brief RWS services.
+     */
+    struct Services
+    {
+      /**
+       * \brief Controller service.
+       */
+      inline static const std::string CTRL      = "/ctrl";
+
+      /**
+       * \brief Fileservice.
+       */
+      inline static const std::string FILESERVICE = "/fileservice";
+
+      /**
+       * \brief RobotWare service.
+       */
+      inline static const std::string RW         = "/rw";
+
+      /**
+       * \brief Subscription service.
+       */
+      inline static const std::string SUBSCRIPTION = "/subscription";
+
+      /**
+       * \brief User service.
+       */
+      inline static const std::string USERS      = "/users";
+    };
     struct Queries
     {
       /**
        * \brief Release action query.
        */
-      static const std::string ACTION_RELEASE;
+      inline static const std::string ACTION_RELEASE = "release";
       
       /**
        * \brief Request action query.
        */
-      static const std::string ACTION_REQUEST;
+      inline static const std::string ACTION_REQUEST = "request";
       
       /**
        * \brief Reset program pointer action query.
        */
-      static const std::string ACTION_RESETPP;
+      inline static const std::string ACTION_RESETPP = "resetpp";
 
       /**
        * \brief Set action query.
        */
-      static const std::string ACTION_SET;
+      inline static const std::string ACTION_SET = "set-value";
       
       /**
        * \brief Set controller state action query.
        */
-      static const std::string ACTION_SETCTRLSTATE;
+      inline static const std::string ACTION_SETCTRLSTATE = "action=setctrlstate";
 
       /**
        * \brief Set locale.
        */
-      static const std::string ACTION_SET_LOCALE;
+      inline static const std::string ACTION_SET_LOCALE = "action=set-locale";
 
       /**
        * \brief Start action query.
        */
-      static const std::string ACTION_START;
+      inline static const std::string ACTION_START = "start";
       
       /**
        * \brief Stop action query.
        */
-      static const std::string ACTION_STOP;
+      inline static const std::string ACTION_STOP = "stop";
 
       /**
        * \brief Task query.
        */
-      static const std::string TASK;
+      inline static const std::string TASK = "task=";
     };
 
     /**
@@ -609,123 +644,92 @@ struct SystemConstants
       /**
        * \brief Instances.
        */
-      static const std::string INSTANCES;
+      inline static const std::string INSTANCES                        = "/instances";
 
       /**
        * \brief Jointtarget.
        */
-      static const std::string JOINTTARGET;
+      inline static const std::string JOINTTARGET                      = "/jointtarget";
       
       /**
        * \brief Logout.
        */
-      static const std::string LOGOUT;
+      inline static const std::string LOGOUT                           = "/logout";
 
       /**
        * \brief Robtarget.
        */
-      static const std::string ROBTARGET;
+      inline static const std::string ROBTARGET                        = "/robtarget";
 
       /**
        * \brief Lead Through.
        */
-      static const std::string LEADTHROUGH;
+      inline static const std::string LEADTHROUGH                      = "/lead-through";
 
       /**
        * \brief Modules.
        */
-      static const std::string MODULES;
+      inline static const std::string MODULES                          = "/modules";
 
       /**
        * \brief Configurations.
        */
-      static const std::string RW_CFG;
+      inline static const std::string RW_CFG                           = Services::RW + "/cfg";
 
       /**
        * \brief Signals.
        */
-      static const std::string RW_IOSYSTEM_SIGNALS;
+      inline static const std::string RW_IOSYSTEM_SIGNALS              = Services::RW + "/iosystem/signals";
 
       /**
        * \brief Mastership.
        */
-      static const std::string RW_MASTERSHIP;
+      inline static const std::string RW_MASTERSHIP                    = Services::RW + "/mastership/edit";
       
       /**
        * \brief Mechanical units.
        */
-      static const std::string RW_MOTIONSYSTEM_MECHUNITS;
+      inline static const std::string RW_MOTIONSYSTEM_MECHUNITS        = Services::RW + "/motionsystem/mechunits";
 
       /**
        * \brief Panel controller state.
        */
-      static const std::string RW_PANEL_CTRLSTATE;
+      inline static const std::string RW_PANEL_CTRLSTATE               = Services::RW + "/panel/ctrl-state";
 
       /**
        * \brief Panel operation mode.
        */
-      static const std::string RW_PANEL_OPMODE;
+      inline static const std::string RW_PANEL_OPMODE                  = Services::RW + "/panel/opmode";
 
       /**
        * \brief RAPID execution.
        */
-      static const std::string RW_RAPID_EXECUTION;
+      inline static const std::string RW_RAPID_EXECUTION               = Services::RW + "/rapid/execution";
 
       /**
        * \brief RAPID modules.
        */
-      static const std::string RW_RAPID_MODULES;
+      inline static const std::string RW_RAPID_MODULES                 = Services::RW + "/rapid/modules";
 
       /**
        * \brief RAPID symbol data.
        */
-      static const std::string RW_RAPID_SYMBOL_DATA_RAPID;
+      inline static const std::string RW_RAPID_SYMBOL_DATA_RAPID       = Services::RW + "/rapid/symbol/RAPID";
       
       /**
        * \brief RAPID symbol properties.
        */
-      static const std::string RW_RAPID_SYMBOL_PROPERTIES_RAPID;
+      inline static const std::string RW_RAPID_SYMBOL_PROPERTIES_RAPID = Services::RW + "/rapid/symbol/RAPID";
 
       /**
        * \brief RAPID tasks.
        */
-      static const std::string RW_RAPID_TASKS;
+      inline static const std::string RW_RAPID_TASKS                   = Services::RW + "/rapid/tasks";
 
       /**
        * \brief RobotWare system.
        */
-      static const std::string RW_SYSTEM;
-    };
-    
-    /**
-     * \brief RWS services.
-     */
-    struct Services
-    {
-      /**
-       * \brief Controller service.
-       */
-      static const std::string CTRL;
-
-      /**
-       * \brief Fileservice.
-       */
-      static const std::string FILESERVICE;
-
-      /**
-       * \brief RobotWare service.
-       */
-      static const std::string RW;
-
-      /**
-       * \brief Subscription service.
-       */
-      static const std::string SUBSCRIPTION;
-
-      /**
-       * \brief User service.
-       */
-      static const std::string USERS;
+      inline static const std::string RW_SYSTEM                        = Services::RW + "/system";
     };
   };
 };
