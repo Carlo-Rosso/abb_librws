@@ -1,77 +1,65 @@
 cmake_minimum_required(VERSION 3.5)
-project(abb_librws VERSION 1.0.0 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+# Read version from the package.xml file.
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/package.xml package_xml_str)
+if(NOT package_xml_str MATCHES "<version>([0-9]+.[0-9]+.[0-9]+)</version>")
+  message(FATAL_ERROR "Could not parse project version from package.xml. Aborting.")
+endif()
 
-add_compile_options(/W0)
-
+# At this point we either have a proper version string, or we've errored
+# out with a FATAL_ERROR above. So assume CMAKE_MATCH_1 contains our
+# package's version.
+project(abb_librws VERSION ${CMAKE_MATCH_1} LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
-# ===========================
-# Try to detect ROS/catkin
-# ===========================
-find_package(catkin QUIET COMPONENTS cmake_modules)
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/third_party")
 
-if(catkin_FOUND)
-  message(STATUS "Building abb_librws with ROS/catkin support")
-else()
-  message(STATUS "Building abb_librws in standalone mode (no ROS)")
+if(WIN32)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-# ===========================
-# POCO dependency
-# ===========================
-find_package(Poco 1.9.2 REQUIRED COMPONENTS Net Util Foundation XML)
+########################
+## POCO C++ Libraries ##
+########################
+# We need at least 1.4.3 because of WebSocket support.
+find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML)
 
-# ===========================
-# Source files
-# ===========================
-set(SRC_FILES
+###########
+## Build ##
+###########
+if(NOT DEFINED BUILD_SHARED_LIBS)
+  option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
+endif()
+
+set(
+  SRC_FILES
     src/rws_client.cpp
     src/rws_common.cpp
     src/rws_interface.cpp
     src/rws_poco_client.cpp
     src/rws_rapid.cpp
-    src/rws_state_machine_interface.cpp)
-
-# ===========================
-# Include directories
-# ===========================
-include_directories(
-    include
-    ${Poco_INCLUDE_DIRS}
+    src/rws_state_machine_interface.cpp
 )
 
-if(catkin_FOUND)
-  include_directories(${catkin_INCLUDE_DIRS})
-endif()
-
-# ===========================
-# Library definition
-# ===========================
 add_library(${PROJECT_NAME} ${SRC_FILES})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_link_libraries(${PROJECT_NAME}
-    ${Poco_LIBRARIES}
-    PocoNet
-    PocoUtil
-    PocoFoundation
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include;${CMAKE_CURRENT_BINARY_DIR}>"
+  $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+  ${Poco_INCLUDE_DIRS}
 )
 
-if(catkin_FOUND)
-  target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
-endif()
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  ${Poco_LIBRARIES}
+)
 
-# ===========================
-# Package export
-# ===========================
-if(catkin_FOUND)
-  catkin_package(
-    INCLUDE_DIRS include
-    LIBRARIES ${PROJECT_NAME}
-    DEPENDS Poco
-  )
+if(NOT BUILD_SHARED_LIBS)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC "ABB_LIBRWS_STATIC_DEFINE")
 endif()
 
 #############

@@ -1,6 +1,6 @@
 /***********************************************************************************************************************
  *
- * Copyright (c) 
+ * Copyright (c)
  * 2015, ABB Schweiz AG
  * 2021, JOiiNT LAB, Fondazione Istituto Italiano di Tecnologia, Intellimech Consorzio per la Meccatronica.
  * All rights reserved.
@@ -34,12 +34,12 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  ***********************************************************************************************************************
- * 
+ *
  * Authors: Gianluca Lentini, Ugo Alberto Simioni
  * Date:18/01/2022
  * Version 1.0
  * Description: this package provides a ROS node that communicates with the controller using Robot Web Services 2.0, original code can be retrieved at https://github.com/ros-industrial/abb_librws
- * 
+ *
  ***********************************************************************************************************************
  */
 
@@ -47,6 +47,7 @@
 #define RWS_INTERFACE_H
 
 #include "rws_client.h"
+#include "iostream"
 
 namespace abb
 {
@@ -157,7 +158,7 @@ public:
      */
     std::string name;
   };
-  
+
   /**
    * \brief A struct for containing static information (at least during runtime) about the robot controller.
    */
@@ -173,7 +174,7 @@ public:
      */
     SystemInfo system_info;
   };
-  
+
   /**
    * \brief A struct for containing runtime information about the robot controller.
    */
@@ -188,17 +189,17 @@ public:
      * \brief Indicator for if the mode is auto or not or unknown.
      */
     TriBool auto_mode;
-    
+
     /**
      * \brief Indicator for if the motors are on or not or unknown.
      */
     TriBool motor_on;
-    
+
     /**
      * \brief Indicator for if RAPID is running or not or unknown.
      */
     TriBool rapid_running;
-    
+
     /**
      * \brief Indicator for if RWS is connected to the robot controller system.
      */
@@ -218,7 +219,7 @@ public:
               SystemConstants::General::DEFAULT_PASSWORD,
               ptrContext)
   {}
-  
+
   /**
    * \brief A constructor.
    *
@@ -277,7 +278,7 @@ public:
    * \return RuntimeInfo containing the runtime information.
    */
   RuntimeInfo collectRuntimeInfo();
-  
+
   /**
    * \brief A method for collecting static information (at least during runtime) of the robot controller.
    *
@@ -300,27 +301,27 @@ public:
    * \return std::string containing the IO signal's value (empty if not found).
    */
   std::string getIOSignal(const std::string iosignal);
-  
+
   /**
    * \brief A method for retrieving the current jointtarget values of a mechanical unit.
-   * 
+   *
    * \param mechunit for the mechanical unit's name.
    * \param p_jointtarget for storing the retrieved jointtarget data.
    *
    * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getMechanicalUnitJointTarget(const std::string mechunit, JointTarget* p_jointtarget);
-  
+
   /**
    * \brief A method for retrieving the current robtarget values of a mechanical unit.
-   * 
+   *
    * \param mechunit for the mechanical unit's name.
    * \param p_robtarget for storing the retrieved robtarget data.
    *
    * \return bool indicating if the communication was successful or not. Note: No checks are made for "correct parsing".
    */
   bool getMechanicalUnitRobTarget(const std::string mechunit, RobTarget* p_robtarget);
-  
+
   /**
    * \brief A method for retrieving the data of a RAPID symbol (parsed into a struct representing the RAPID data).
    *
@@ -361,28 +362,28 @@ public:
    * \return std::vector<RAPIDTaskInfo> containing the RAPID tasks information.
    */
   std::vector<RAPIDTaskInfo> getRAPIDTasks();
-  
+
   /**
    * \brief A method for retrieving some system information from the robot controller.
    *
    * \return SystemInfo containing the system information.
    */
   SystemInfo getSystemInfo();
-  
+
   /**
    * \brief A method for checking if the robot controller mode is in auto mode.
    *
    * \return TriBool indicating if the mode is auto or not or unknown.
    */
   TriBool isAutoMode();
-  
+
   /**
    * \brief A method for checking if the motors are on.
    *
    * \return TriBool indicating if the motors are on or not or unknown.
    */
   TriBool isMotorOn();
-  
+
   /**
    * \brief A method for checking if RAPID is running.
    *
@@ -401,7 +402,7 @@ public:
   bool setIOSignal(const std::string iosignal, const std::string value);
 
   bool pulseIOSignal(const std::string iosignal, const int lenght);
-  
+
   /**
    * \brief A method for setting the data of a RAPID symbol.
    *
@@ -429,52 +430,52 @@ public:
   bool setRAPIDSymbolData(const std::string task,
                           const RWSClient::RAPIDSymbolResource symbol,
                           RAPIDSymbolDataAbstract& data);
-  
+
   /**
    * \brief A method for starting RAPID execution in the robot controller.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool startRAPIDExecution();
-  
+
   /**
    * \brief A method for stopping RAPID execution in the robot controller.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool stopRAPIDExecution();
-  
+
   /**
    * \brief A method for reseting the RAPID program pointer in the robot controller.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool resetRAPIDProgramPointer();
 
   /**
    * \brief A method for turning on the robot controller's motors.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool setMotorsOn();
-  
+
   /**
    * \brief A method for turning off the robot controller's motors.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool setMotorsOff();
 
    /**
    * \brief A method for turning on the robot compliance lead through.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool setLeadThroughOn(const std::string mechUnit);
 
    /**
    * \brief A method for turning off the robot compliance lead through.
-   * 
+   *
    * \return bool indicating if the communication was successful or not.
    */
   bool setLeadThroughOff(const std::string mechUnit);
@@ -509,7 +510,7 @@ public:
    * \return bool indicating if the communication was successful or not.
    */
   bool deleteFile(const RWSClient::FileResource resource);
-  
+
   /**
    * \brief A method for starting for a subscription.
    *
@@ -527,14 +528,14 @@ public:
   bool waitForSubscriptionEvent();
 
   /**
-   * \brief A method for waiting for a subscription event (use if the event content is important). 
+   * \brief A method for waiting for a subscription event (use if the event content is important).
    *
    * \param p_xml_document for storing the data received in the subscription event.
    *
    * \return bool indicating if the communication was successful or not.
    */
   bool waitForSubscriptionEvent(Poco::AutoPtr<Poco::XML::Document>* p_xml_document);
-   
+
   /**
    * \brief A method for ending a active subscription.
    *
@@ -554,7 +555,7 @@ public:
   bool registerLocalUser(std::string username = SystemConstants::General::DEFAULT_USERNAME,
                          std::string application = SystemConstants::General::EXTERNAL_APPLICATION,
                          std::string location = SystemConstants::General::EXTERNAL_LOCATION);
-  
+
   /**
    * \brief A method for registering a user as remote.
    *
