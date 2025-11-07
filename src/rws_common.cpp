@@ -155,14 +155,5 @@ bool xmlNodeHasAttribute(const Poco::XML::Node* p_node, const XMLAttribute attri
 
   return found;
 }
-
-
-
-
-/***********************************************************************************************************************
- * Struct definitions: SystemConstants
- */
-
-
 } // end namespace rws
 } // end namespace abb
