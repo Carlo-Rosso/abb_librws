@@ -306,6 +306,10 @@ POCOClient::POCOResult POCOClient::makeHTTPRequest(const std::string method,
       authenticate(result, request, response, content);
     }
 
+    // If the initial request was unauthorized, the result object has now been updated by authenticate().
+    // We need to update the local response object as well to reflect the new state.
+    response.setStatus(result.poco_info.http.response.status);
+
     result.status = POCOResult::OK;
   }
   catch (InvalidArgumentException& e)

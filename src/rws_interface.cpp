@@ -299,7 +299,14 @@ RWSInterface::SystemInfo RWSInterface::getSystemInfo()
   SystemInfo result;
 
   RWSClient::RWSResult rws_result = rws_client_.getRobotWareSystem();
+  // RobotWare 6 used class="sys-system-li", while RobotWare 7 uses class="sys-system".
+  // Try the legacy selector first, then fall back to the new one.
   std::vector<Poco::XML::Node*> node_list = xmlFindNodes(rws_result.p_xml_document, XMLAttributes::CLASS_SYS_SYSTEM_LI);
+  if (node_list.empty())
+  {
+    const XMLAttribute SYS_SYSTEM{"class", "sys-system"};
+    node_list = xmlFindNodes(rws_result.p_xml_document, SYS_SYSTEM);
+  }
 
   for (size_t i = 0; i < node_list.size(); ++i)
   {
