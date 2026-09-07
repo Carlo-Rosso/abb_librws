@@ -492,6 +492,40 @@ namespace abb
       }
 
       /**
+       * \brief A constructor with an explicit or automatically selected RWS version.
+       */
+      RWSInterface(const std::string &ip_address,
+                   const unsigned short port,
+                   const POCOClient::RWSVersion version)
+          : rws_client_(ip_address, port, version)
+      {
+      }
+
+      /**
+       * \brief A constructor with credentials and an explicit or automatically selected RWS version.
+       */
+      RWSInterface(const std::string &ip_address,
+                   const unsigned short port,
+                   const std::string &username,
+                   const std::string &password,
+                   const POCOClient::RWSVersion version)
+          : rws_client_(ip_address, port, username, password, version)
+      {
+      }
+
+      /**
+       * \brief A constructor with credentials, RWS version and an optional HTTPS context.
+       */
+      RWSInterface(const std::string &ip_address,
+                   const unsigned short port,
+                   const std::string &username,
+                   const std::string &password,
+                   const POCOClient::RWSVersion version,
+                   const Poco::Net::Context::Ptr ptrContext)
+          : rws_client_(ip_address, port, username, password, version, ptrContext)
+      {
+      }
+      /**
        * \brief A method for collecting runtime information of the robot controller.
        *
        * \return RuntimeInfo containing the runtime information.

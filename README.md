@@ -6,51 +6,43 @@
 
 ## Important Notes
 
-RobotWare main versions `6.x` and `7.x` are currently supported. 
+RobotWare main versions `6.x` and `7.x` are supported through RWS `1.0` and `2.0`, respectively. RWS 1.0 uses HTTP; RWS 2.0 uses HTTPS.
 
-## Overview
-
-A C++ library for interfacing with ABB robot controllers supporting *Robot Web Services* (RWS) `1.0` (for RobotWare `6.x`) and *Robot Web Services* (RWS) `2.0` (for RobotWare `7.x`).  
-Refer to the online [RWS 1.0 documentation](http://developercenter.robotstudio.com/webservice/api_reference) and [RWS 2.0 documentation](https://developercenter.robotstudio.com/api/RWS?urls.primaryName=Introduction) for a detailed description of what RWS is and how to use it.
-
-Usage differs depending on how the `RWSInterface` constructor is instantiated:
-
-- **For RWS 1.0:** only the robot’s IP address is required.  
-- **For RWS 2.0:** in addition to the IP address, a `Poco::Net::Context` object must be provided, defined as follows:
+The `RWSInterface`, `RWSClient`, and `RWSStateMachineInterface` constructors accept a `POCOClient::RWSVersion` when the protocol should be selected explicitly:
 
 ```cpp
-Poco::Net::Context::Ptr pContext =
-    new Poco::Net::Context(
-        Poco::Net::Context::CLIENT_USE, 
-        "", 
-        "", 
-        "", 
-        Poco::Net::Context::VERIFY_NONE
-    );
+using RWSVersion = abb::rws::POCOClient::RWSVersion;
+
+// RobotWare 6.x / RWS 1.0 / HTTP
+abb::rws::RWSInterface legacy("192.168.125.1", 80, RWSVersion::RWS1);
+
+// RobotWare 7.x / RWS 2.0 / HTTPS
+abb::rws::RWSInterface modern("192.168.125.1", 443, RWSVersion::RWS2);
 ```
 
-Explanation of Parameters:
+`RWSVersion::AUTO` selects RWS 2.0 when the port is `443`, and RWS 1.0 for any other port. This makes the usual virtual-controller configurations work without changing application code:
 
-- `Poco::Net::Context::CLIENT_USE` — Creates an SSL context for a client (C++) connecting to a server (the robot).
-- `""` (privateKeyFile) — No client private key.
-- `""` (certificateFile) — No client certificate.
-- `""` (caLocation) — No certificate authority bundle.
-- `Poco::Net::Context::VERIFY_NONE` — Disables all TLS certificate verification on the client side.
+```cpp
+abb::rws::RWSInterface controller("192.168.125.1", 443, RWSVersion::AUTO);
+```
 
-Instantiating the relevant constructor automatically connects to the robot using the default ports:
+For HTTPS, the library creates a client SSL context with certificate verification disabled when no context is supplied. This is suitable for the self-signed certificates commonly used by RobotWare virtual controllers. For production use, pass a configured `Poco::Net::Context::Ptr` to the constructor to validate the controller certificate. The explicit context form is:
 
-- port **80** for RWS 1.0
-- port **443** for RWS 2.0
+```cpp
+Poco::Net::Context::Ptr context =
+    new Poco::Net::Context(
+        Poco::Net::Context::CLIENT_USE,
+        "", "", "",
+        Poco::Net::Context::VERIFY_NONE);
 
-If, when using RWS 2.0, the connection fails, check which port the controller is actually listening on.
-You can force port **443** by editing:
+abb::rws::RWSInterface controller(
+    "192.168.125.1", 443, "Default User", "robotics",
+    RWSVersion::RWS2, context);
+```
 
-`C:\Users\<user>\AppData\Local\ABB\RobotWare\RobotControl_7.xx.x\system\appweb.conf`
+The old constructors remain available: constructors without a version or SSL context select RWS 1.0, while constructors receiving a `Poco::Net::Context::Ptr` select RWS 2.0.
 
-and setting:
-
-`ListenSecure 443`
-
+The default ports are `80` for RWS 1.0 and `443` for RWS 2.0. If a RobotWare 7.x controller uses another secure port, pass `RWSVersion::RWS2` explicitly (or configure the secure listener, for example with `ListenSecure 443` in `appweb.conf`).
 For RWS 2.0, mastership is required for write operations (and must be released immediately after the write).
 To check in detail which operations require mastership, refer to the **RWS 2.0 documentation** linked above, look for the **“Mastership is required”** note within the function descriptions.
 
@@ -62,6 +54,9 @@ The following is a conceptual sketch of how this RWS library can be viewed, in r
 
 ![RWS sketch](docs/images/rws_sketch.png)
 
+### Running the RWS test on Windows
+
+The CMake build copies the POCO, OpenSSL, and zlib runtime DLLs beside `rws_test.exe`. Therefore the test can be launched directly from `build/bin` after `pixi run build`, without manually editing `PATH`.
 ### Requirements
 
 * RobotWare version `6.x` (for RWS `1.0`) or `7.x` (for RWS `2.0`).

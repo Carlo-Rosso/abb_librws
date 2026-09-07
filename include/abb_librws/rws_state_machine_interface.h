@@ -851,6 +851,43 @@ namespace abb
       }
 
       /**
+       * \brief A constructor with an explicit or automatically selected RWS version.
+       */
+      RWSStateMachineInterface(const std::string &ip_address,
+                               const unsigned short port,
+                               const POCOClient::RWSVersion version)
+          : RWSInterface(ip_address, port, version),
+            services_(this)
+      {
+      }
+
+      /**
+       * \brief A constructor with credentials and an explicit or automatically selected RWS version.
+       */
+      RWSStateMachineInterface(const std::string &ip_address,
+                               const unsigned short port,
+                               const std::string &username,
+                               const std::string &password,
+                               const POCOClient::RWSVersion version)
+          : RWSInterface(ip_address, port, username, password, version),
+            services_(this)
+      {
+      }
+
+      /**
+       * \brief A constructor with credentials, RWS version and an optional HTTPS context.
+       */
+      RWSStateMachineInterface(const std::string &ip_address,
+                               const unsigned short port,
+                               const std::string &username,
+                               const std::string &password,
+                               const POCOClient::RWSVersion version,
+                               const Poco::Net::Context::Ptr ptrContext)
+          : RWSInterface(ip_address, port, username, password, version, ptrContext),
+            services_(this)
+      {
+      }
+      /**
        * \brief Services provided by the StateMachine AddIn.
        *
        * Note: I.e. a representation of RAPID modules, and related configurations, loaded by the AddIn.
