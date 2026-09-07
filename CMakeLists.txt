@@ -37,6 +37,17 @@ if(NOT DEFINED BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
 endif()
 
+####################
+## Build Example  ##
+####################
+if(NOT DEFINED CMAKE_BUILD_EXAMPLES)
+  option(CMAKE_BUILD_EXAMPLES "Build example applications" OFF)
+endif()
+
+if(CMAKE_BUILD_EXAMPLES)
+  add_subdirectory(example)
+endif()
+
 set(
   SRC_FILES
     src/rws_client.cpp
