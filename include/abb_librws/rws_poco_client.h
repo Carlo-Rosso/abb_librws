@@ -61,6 +61,7 @@ namespace abb
     public:
       enum class RWSVersion : int
       {
+        AUTO = 0, ///< Select RWS 1.0 or 2.0 from the configured port.
         RWS1 = 1,
         RWS2 = 2
       };
@@ -254,44 +255,50 @@ namespace abb
       };
 
       /**
-       * \brief A constructor for 1.0.
+       * \brief A constructor with an explicit or automatically selected RWS version.
        *
-       * \param ip_address for the remote server's IP address.
-       * \param port for the remote server's port.
-       * \param username for the username to the remote server's authentication process.
-       * \param password for the password to the remote server's authentication process.
+       * When version is AUTO, port 443 selects RWS 2.0 (HTTPS) and every other
+       * port selects RWS 1.0 (HTTP). If no SSL context is supplied, a context
+       * with certificate verification disabled is created for RWS 2.0.
+       */
+      POCOClient(const std::string &ip_address,
+                 const Poco::UInt16 port,
+                 const std::string &username,
+                 const std::string &password,
+                 const RWSVersion version,
+                 const Poco::Net::Context::Ptr ptrContext)
+          : http_client_session_(ip_address, port),
+            https_client_session_(ip_address, port, ptrContext.isNull() ? makeDefaultClientContext() : ptrContext),
+            http_credentials_(username, password),
+            rws_version_(resolveRWSVersion(version, port))
+      {
+        http_client_session_.setKeepAlive(true);
+        http_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
+        https_client_session_.setKeepAlive(true);
+        https_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
+      }
+
+      /**
+       * \brief A backwards-compatible constructor for RWS 1.0.
        */
       POCOClient(const std::string &ip_address,
                  const Poco::UInt16 port,
                  const std::string &username,
                  const std::string &password)
-          : rws_version_(RWSVersion::RWS1),
-            http_client_session_(ip_address, port),
-            http_credentials_(username, password)
+          : POCOClient(ip_address, port, username, password, RWSVersion::RWS1, Poco::Net::Context::Ptr())
       {
-        http_client_session_.setKeepAlive(true);
-        http_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
       }
 
       /**
-       * \brief A constructor for 2.0.
-       *
-       * \param ip_address for the remote server's IP address.
-       * \param port for the remote server's port.
-       * \param username for the username to the remote server's authentication process.
-       * \param password for the password to the remote server's authentication process.
+       * \brief A backwards-compatible constructor for RWS 2.0.
        */
       POCOClient(const std::string ip_address,
                  const Poco::UInt16 port,
                  const std::string username,
                  const std::string password,
                  const Poco::Net::Context::Ptr ptrContext)
-          : rws_version_(RWSVersion::RWS2),
-            https_client_session_(ip_address, port, ptrContext),
-            http_credentials_(username, password)
+          : POCOClient(ip_address, port, username, password, RWSVersion::RWS2, ptrContext)
       {
-        https_client_session_.setKeepAlive(true);
-        https_client_session_.setTimeout(Poco::Timespan(DEFAULT_HTTP_TIMEOUT));
       }
 
       /**
@@ -418,6 +425,26 @@ namespace abb
       RWSVersion getRWSVersion() const { return rws_version_; }
 
     private:
+      /**
+       * \brief Resolve AUTO without contacting the controller.
+       */
+      static RWSVersion resolveRWSVersion(const RWSVersion version, const Poco::UInt16 port)
+      {
+        return version == RWSVersion::AUTO ? (port == 443 ? RWSVersion::RWS2 : RWSVersion::RWS1) : version;
+      }
+
+      /**
+       * \brief Create the default context used for ABB controllers' self-signed certificates.
+       */
+      static Poco::Net::Context::Ptr makeDefaultClientContext()
+      {
+        return new Poco::Net::Context(Poco::Net::Context::CLIENT_USE,
+                                      "",
+                                      "",
+                                      "",
+                                      Poco::Net::Context::VERIFY_NONE);
+      }
+
       /**
        * \brief A method for making a HTTP request.
        *

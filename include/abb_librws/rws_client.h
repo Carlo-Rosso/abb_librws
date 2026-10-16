@@ -412,6 +412,46 @@ namespace abb
       }
 
       /**
+       * \brief A constructor with an explicit or automatically selected RWS version.
+       */
+      RWSClient(const std::string &ip_address,
+                const unsigned short port,
+                const POCOClient::RWSVersion version)
+          : POCOClient(ip_address,
+                       port,
+                       SystemConstants::General::DEFAULT_USERNAME,
+                       SystemConstants::General::DEFAULT_PASSWORD,
+                       version,
+                       Poco::Net::Context::Ptr())
+      {
+      }
+
+      /**
+       * \brief A constructor with credentials and an explicit or automatically selected RWS version.
+       */
+      RWSClient(const std::string &ip_address,
+                const unsigned short port,
+                const std::string &username,
+                const std::string &password,
+                const POCOClient::RWSVersion version)
+          : POCOClient(ip_address, port, username, password, version, Poco::Net::Context::Ptr())
+      {
+      }
+
+      /**
+       * \brief A constructor with credentials, RWS version and an optional HTTPS context.
+       */
+      RWSClient(const std::string &ip_address,
+                const unsigned short port,
+                const std::string &username,
+                const std::string &password,
+                const POCOClient::RWSVersion version,
+                const Poco::Net::Context::Ptr ptrContext)
+          : POCOClient(ip_address, port, username, password, version, ptrContext)
+      {
+      }
+
+      /**
        * \brief A destructor.
        */
       ~RWSClient()

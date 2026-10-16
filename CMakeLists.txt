@@ -14,6 +14,10 @@ project(abb_librws VERSION ${CMAKE_MATCH_1} LANGUAGES CXX)
 
 include(GNUInstallDirs)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules/third_party")
 
 if(WIN32)
@@ -31,6 +35,17 @@ find_package(Poco 1.4.3 REQUIRED COMPONENTS Foundation Net Util XML Crypto NetSS
 ###########
 if(NOT DEFINED BUILD_SHARED_LIBS)
   option(BUILD_SHARED_LIBS "Build dynamically-linked binaries" ON)
+endif()
+
+####################
+## Build Example  ##
+####################
+if(NOT DEFINED CMAKE_BUILD_EXAMPLES)
+  option(CMAKE_BUILD_EXAMPLES "Build example applications" OFF)
+endif()
+
+if(CMAKE_BUILD_EXAMPLES)
+  add_subdirectory(example)
 endif()
 
 set(
