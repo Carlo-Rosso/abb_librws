@@ -44,6 +44,7 @@ The old constructors remain available: constructors without a version or SSL con
 
 The default ports are `80` for RWS 1.0 and `443` for RWS 2.0. If a RobotWare 7.x controller uses another secure port, pass `RWSVersion::RWS2` explicitly (or configure the secure listener, for example with `ListenSecure 443` in `appweb.conf`).
 For RWS 2.0, mastership is required for write operations (and must be released immediately after the write).
+When the RobotWare controller is in **Automatic** mode, an RWS 2.0 client can request mastership directly. In **Manual** mode, the remote client must first obtain Remote Mastership Management Privilege (RMMP) and the request must be approved on the FlexPendant. The example test therefore requires Automatic mode unless the RMMP workflow is implemented and approved.
 To check in detail which operations require mastership, refer to the **RWS 2.0 documentation** linked above, look for the **“Mastership is required”** note within the function descriptions.
 
 Please note that this package has not been productized, it is provided "as-is" and only limited support can be expected.

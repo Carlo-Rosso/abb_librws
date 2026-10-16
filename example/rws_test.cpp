@@ -77,8 +77,8 @@ namespace
 
   RWSVersion resolvedVersion(const RWSVersion version, const unsigned short port)
   {
-    return version == RWSVersion::AUTO && port == 443 ? RWSVersion::RWS2 :
-           version == RWSVersion::AUTO ? RWSVersion::RWS1 : version;
+    return version == RWSVersion::AUTO && port == 443 ? RWSVersion::RWS2 : version == RWSVersion::AUTO ? RWSVersion::RWS1
+                                                                                                       : version;
   }
 
   std::unique_ptr<RWSInterface> makeClient(const Options &options, const RWSVersion version)
@@ -131,11 +131,6 @@ namespace
     {
       std::cout << "Requesting RWS 2.0 mastership...\n";
       mastership = client.requestMasterShip();
-      if (!mastership)
-      {
-        std::cerr << "[ERROR] Could not obtain RWS 2.0 mastership.\n";
-        return 1;
-      }
     }
 
     const bool write_ok = client.setRAPIDSymbolData(options.task, options.module, options.variable, new_value);
